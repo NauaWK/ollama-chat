@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat com IA - Ollama</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --bg-color: #f9f9f9;
+      --primary-color: #4a90e2;
+      --text-color: #333;
+      --border-radius: 8px;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 40px;
+      width: 100%;
+      max-width: 600px;
+      background: white;
+      padding: 30px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: var(--primary-color);
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 0 12px 12px;
+      border: 1px solid #ccc;
+      border-radius: var(--border-radius);
+      font-size: 16px;
+    }
+
+    button {
+      margin-top: 15px;
+      width: 100%;
+      padding: 12px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #357ab8;
+    }
+
+    pre {
+      width: 100%;
+      margin-top: 20px;
+      background-color: #f0f0f0;
+      padding: 15px 0 15px 15px;
+      border-radius: var(--border-radius);
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Chat com TinyLlama</h2>
+    <input type="text" id="prompt" placeholder="Digite seu prompt...">
+    <button onclick="enviarPrompt()">Enviar</button>
+    <pre id="resposta"></pre>
+  </div>
+
+  <script>
+    function enviarPrompt() {
+      const prompt = document.getElementById('prompt').value.trim();
+      if (!prompt) return;
+
+      document.getElementById('resposta').textContent = "Pensando...";
+
+      fetch('backend.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('resposta').textContent = data.response;
+      })
+      .catch(err => {
+        document.getElementById('resposta').textContent = "Erro ao conectar com o servidor.";
+        console.error(err);
+      });
+    }
+  </script>
+</body>
+</html>
